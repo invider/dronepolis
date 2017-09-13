@@ -65,8 +65,7 @@ function tryLevelUp() {
 }
 
 function setupLevel() {
-    //env.totalToSpawn = scaleLinear(40, env.level, 5, 200)
-    env.totalToSpawn = 2
+    env.totalToSpawn = scaleLinear(40, env.level, 5, 200)
     env.maxDronesOnLevel = scaleLinear(40, env.level, 10, 100)
 
     // reinitialize stat

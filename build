@@ -5,7 +5,9 @@ rm -rf dist/
 gulp
 
 #tar -czf dist/dronepolis.tar.gz dist/*
-zip dist/dronepolis.zip dist/*
+cd dist
+zip dronepolis.zip *
+cd ..
 
 wc -c *.js
 echo "----------------------------"
