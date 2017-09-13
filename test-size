@@ -1,0 +1,15 @@
+#!/bin/sh
+
+rm -rf dist/
+
+gulp
+
+#tar -czf dist/dronepolis.tar.gz dist/*
+zip dist/dronepolis.zip dist/*
+
+wc -c *.js
+echo "----------------------------"
+du -sh dist/* | grep 'js'
+du -sh dist/* | grep 'zip'
+wc -c dist/*.js
+wc -c dist/*.zip

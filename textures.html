@@ -1,0 +1,28 @@
+<html>
+
+<script src="util.js"></script>
+<script src="texture.js"></script>
+
+
+<script>
+
+function onLoad() {
+    console.log('generating textures')
+    for (var i = 0; i < 25; i++) {
+        var img = generateMaterial(i)
+
+        var tag = document.createElement('span')
+        tag.innerHTML ='<b>= #'+i+' =</b>'
+
+        document.getElementById('gallery').appendChild(img)
+        document.getElementById('gallery').appendChild(tag)
+    }
+}
+
+</script>
+
+<body onload="onLoad()">
+    <div id="gallery">
+    </div>
+</body>
+</html>

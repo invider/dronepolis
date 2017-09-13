@@ -1,0 +1,28 @@
+{
+  "name": "tunnel",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "glob": "^7.1.2",
+    "graceful-fs": "^4.1.11",
+    "gulp-closure-compiler": "^0.4.0",
+    "gulp-htmlclean": "^2.7.15",
+    "harmonize": "^1.33.7"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/invider/cybergrid-13.git"
+  },
+  "author": "",
+  "license": "Apache License v2.0",
+  "bugs": {
+    "url": "https://github.com/invider/cybergrid-13/issues"
+  },
+  "homepage": "https://github.com/invider/cybergrid-13#readme"
+}
