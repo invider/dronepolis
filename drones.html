@@ -41,34 +41,16 @@
         highp vec3 ambientLight = uAmbientLight;
 
         if (uShading == 0) {
-            // Apply lighting effect
-            //highp vec3 ambientLight = vec3(.3, .3, .3);
-            //highp vec3 ambientLight = vec3(.5, .5, .5);
-            //highp vec3 ambientLight = vec3(1, 1, 1);
-            //highp vec3 directionalLightColor = vec3(1, 1, 1);
             highp vec3 directionalLightColor = uDirLight;
             highp vec3 directionalVector = normalize(vec3(-1, 1, -1));
 
             highp vec3 transformedNormal = uNMatrix * aVertexNormal;
-            //highp vec4 transformedNormal = uNMatrix * vec4(aVertexNormal, 1.0);
 
             highp float directional = max(dot(transformedNormal, directionalVector), 0.0);
             vLighting = ambientLight + (directionalLightColor * directional);
         } else if (uShading == 1) {
             vLighting = ambientLight;
         }
-
-/*
-        vColor = vec4(1, 1, 0, 1);
-
-        vec3 ambientLight = vec3(0.1, 0.1, 0.1)
-        vec3 diffuseLightColor = vec3(0.5, 0.5, 0.5)
-        vec3 directionalLightPosition = normalize(vec3(10, 10, 5));
-
-        vec3 transformedNormal = uNMatrix * aVertexNormal;
-        float diffuseLgithAmount = max( dot(transformedNormal, directionalLightPosition), 0.0);
-        vLight = ambientLight + (diffuseLightAmount * diffuseLightColor);
-*/
     }
 </script>
 
@@ -97,14 +79,6 @@
         } else {
             gl_FragColor = texelLit;
         }
-
-        //gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
-
-		// plain color
-        //gl_FragColor = vec4(0.0, 0.5, 0.0, 0.1); 
-
-        // use alpha for coloring
-		//gl_FragColor = vec4(uTextColor.rgb, texture2D(texture1,vTexCoord).a);
     }
 </script>
 
