@@ -2,7 +2,7 @@ var gl;
 
 // fine tuning
 CULLING = 60
-SPAWN_RATE = 0.3
+SPAWN_RATE = 0.5
 ROLLING_DEMO_TIME = 30
 
 // resources
@@ -128,6 +128,7 @@ function targetNext(jump, team) {
         // found new drone to jump in
         target = e // attach camera
         if (focus) focus = target // attach controls if needed
+        env.targetTime = 5 + rndi(10)
     }
     return e
 }
@@ -149,7 +150,7 @@ function spawn(cons, x, y, z) {
 }
 
 function spawnDrone(team) {
-    let coord = grid.freeSpot()
+    let coord = grid.freeSpot(team)
     let e = findEntity( function(e) {
         return (dist(e.x, e.z, coord[0], coord[1]) < 5) && e.type < 3
     })
@@ -158,12 +159,13 @@ function spawnDrone(team) {
     if (target) camDist = floor(dist(target.x, target.y, coord[0], coord[1]))
 
     // if not occupied and far from the camera
-    if (!e && camDist > 50) {
+    if (!e && (team || camDist > 40)) {
         //console.log('spawning +1 drone @' + coord[0] + 'x' + coord[1] + ' camDist:' + camDist)
         let d = spawn(Drone, coord[0], -0.5, coord[1])
         d.yaw = rndfi()
         if (team) d.assignTeam(team)
         if (team == 0) stat.lostSpawned ++
+        sfx(10,1)
         return d
     } else {
         // try again
@@ -193,6 +195,7 @@ function cycle() {
     try {
         handleKeyboard(delta);
         render(delta);
+        if (delta > 0.3) delta = 0.3
         while (delta > 0.05) {
             evo(0.05)
             delta -= 0.05
@@ -243,7 +246,6 @@ function evo(delta) {
     if (env.demo) {
         env.targetTime -= delta
         if (env.targetTime < 0) {
-            env.targetTime = 5 + rndi(10)
             // find next target
             targetNext()
         }
@@ -394,14 +396,14 @@ function render(delta) {
         statusBar.innerHTML = ''
             + '<font color="#A0A0D0">Lost: '
                 + stat.units(0, 1)
-                + '/' + env.totalToSpawn + '</font>'
+                + '/' + (env.totalToSpawn-stat.lostSpawned) + '</font>'
 
             + '&nbsp&nbsp<font color="#40FF20"> Green: ' + stat.units(1, 1) + '</font>'
             + '&nbsp&nbsp<font color="#FF5020"> Red: ' + stat.units(2, 1) + '</font>'
             + '&nbsp&nbsp<font color="#5020FF"> Blue: ' + stat.units(3, 1) + '</font>'
             + '&nbsp&nbsp<font color="#FFD000"> Yellow: ' + stat.units(4, 1) + '</font>'
             + (env.pause? '<br>(GAME PAUSED) ' : '')
-
+            + (env.demo? '<br>(DEMO MODE) ' : '')
     }
     if (target && env.overlay) {
         overlay.innerHTML = 
@@ -420,15 +422,12 @@ function render(delta) {
                 + '<br>Action: ' + target.action + '[' + floor(target.actionTime) + ']'
                 + '<br>Move: ' + target.move + '[' + floor(target.moveTime) + ']')
             )
-            + '<hr>FPS: ' + Math.round(1/delta)
-            + '<br>Models: ' + env.modelsCount
             + '<br>Drones: ' + stat.units(-1, 1)
             + '<br>Status: ' + env.status
-            + (env.demo? '<br>= DEMO =' : '')
-            + (env.pause? '<br>= PAUSE =' : '')
+            + '<hr>FPS: ' + Math.round(1/delta)
     } else if (target) {
         overlay.innerHTML = ''
-            + 'Shield: ' + target.shield
-            + '<br>' + target
+            + target
+            + '<br>Shield: ' + target.shield + '/' + target.MAX_SHIELD
     }
 }

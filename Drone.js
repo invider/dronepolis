@@ -191,6 +191,7 @@ let Drone = function() {
         if (this.team == target.team) {
             message('New Lost Drone joined out team!', 3)
         }
+        sfx(9, 1, this)
     }
 
     this.hit = function(t) {
@@ -468,6 +469,7 @@ let Drone = function() {
             stat.kills[src.team]++
             if (src == focus) stat.playerKills[src.team] ++
         }
+        sfx(2, 1, this)
     }
 
     this.toString = function() {

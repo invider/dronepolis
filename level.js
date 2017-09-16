@@ -1,36 +1,20 @@
 
-function scaleLinear(base, val, scale, max) {
-    if (max) return limitMax(base + val*scale, max)
-    else return base + val*scale
-}
-
-function downLinear(base, val, scale, min) {
-    return limitMin(base - val*scale, min)
-}
-
 function placeUnits() {
     silent = true
     _seed = env.level * 7181
     // place player
     var player = spawnDrone(1)
-    focus = player
-    target = player
-
-    // help the player with initial bots
-    if (env.level == 1) spawnDrone(1)
-    if (env.level < 5) spawnDrone(1)
-
 
     // additional drones
-    let n = floor(scaleLinear(0, env.level, 0.5, 20)) + 1
-    for (var i = 0; i < n; i++) {
-        spawnDrone(2)
-        spawnDrone(3)
-        spawnDrone(4)
-    }
+    let n = scaleLinear(10, env.level, 2, 20)
+    for (var i = 0; i < n; i++)
+        for (var t = 1; t < 5; t++) spawnDrone(t)
 
     for (i = 0; i < grid.width*2; i++) spawnPod()
+
     silent = false
+    focus = player
+    target = player
 }
 
 function teamName(n) {
@@ -45,8 +29,12 @@ function teamName(n) {
 
 function tryLevelUp() {
     if (
-            stat.lostSpawned >= env.totalToSpawn  // we have spawned everybody
-            && stat.units(0, 1) == 0  // no more lost souls
+            (stat.lostSpawned >= env.totalToSpawn  // we have spawned everybody
+            && stat.units(0, 1) == 0)  // no more lost souls
+                || stat.enemies(1) == 0
+                || stat.enemies(2) == 0
+                || stat.enemies(3) == 0
+                || stat.enemies(4) == 0
        ) {
         // level is over! determine who is the winner
         let winner = 0
@@ -65,8 +53,8 @@ function tryLevelUp() {
 }
 
 function setupLevel() {
-    env.totalToSpawn = scaleLinear(40, env.level, 5, 200)
-    env.maxDronesOnLevel = scaleLinear(40, env.level, 10, 100)
+    env.totalToSpawn = scaleLinear(30, env.level, 10, 200)
+    env.maxDronesOnLevel = scaleLinear(100, env.level, 10, 250)
 
     // reinitialize stat
     stat = {
@@ -89,6 +77,13 @@ function setupLevel() {
                     if (e.type == type && e.team == team && e.alive) i++
                 })
             }
+            return i
+        },
+        enemies: function(team) {
+            let i = 0
+            entities.forEach( function(e) {
+                if (e.type == 1 && e.team != team && e.team != 0 && e.alive) i++
+            })
             return i
         },
     }

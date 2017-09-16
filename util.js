@@ -128,6 +128,16 @@ function down(val, min, step) {
     return val < min? min : val
 }
 
+function scaleLinear(base, val, scale, max) {
+    if (max) return limitMax(base + val*scale, max)
+    else return base + val*scale
+}
+
+function downLinear(base, val, scale, min) {
+    return limitMin(base - val*scale, min)
+}
+
+
 // global const
 let PI = Math.PI
 let PI2 = PI*2

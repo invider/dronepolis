@@ -3,12 +3,13 @@ var keys = {};
 function handleKeyDown(e) {
     let code = e.which || e.keyCode
     keys[code] = true;
-    if (code != 8 && code != 9) env.lastControl = 0
+    if (code != 8 && code != 9 && code != 80) env.lastControl = 0
     e.preventDefault()
     e.stopPropagation()
     return false;
 }
 
+let nextSfx = 0
 function handleKeyUp(e) {
     var code = e.which || e.keyCode
     keys[code] = false;
