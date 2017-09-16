@@ -4,15 +4,18 @@ js13k compo entry
 
 ## Controls
 
-WASD/Cursor keys - move around
-Space/Shift/E - shoot
-Q - pass control of current drone to AI
-Tab/Backspace - jump into next/previous drone of your team (or any drone in Demo mode)
-F1 - enable Demo mode
-F2 - show debug info
-F4 - spawn new lost drone
-F5 - spawn a drone to join random team
-F12 - upgrade drone
+* WASD/Cursor keys - move around
+* Space/Shift/E - shoot
+* Q - pass control of current drone to AI
+* Tab/Backspace - jump into next/previous drone of your team (or any drone in Demo mode)
+* P - pause
+* F1/O - enable Demo mode
+* F2   - show debug info
+* F4   - spawn new lost drone
+* F5   - spawn a drone to join random team
+* F12  - upgrade drone
+
+Trick - in Demo mode you can jump into drone of any team. Once you take control over it - you are playing for that team!
 
 
 ## Things left to do that haven't got into compo version
