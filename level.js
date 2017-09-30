@@ -31,6 +31,7 @@ function tryLevelUp() {
     if (
             (stat.lostSpawned >= env.totalToSpawn  // we have spawned everybody
             && stat.units(0, 1) == 0)  // no more lost souls
+                || stat.enemies(0) == 0
                 || stat.enemies(1) == 0
                 || stat.enemies(2) == 0
                 || stat.enemies(3) == 0
@@ -49,12 +50,14 @@ function tryLevelUp() {
         }
         return winner
     }
-    return 0
+    return -1
 }
 
 function setupLevel() {
     env.totalToSpawn = scaleLinear(30, env.level, 10, 200)
     env.maxDronesOnLevel = scaleLinear(100, env.level, 10, 250)
+    env.levelCountdown = 0
+    Drone._spawn = 0
 
     // reinitialize stat
     stat = {

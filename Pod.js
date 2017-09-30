@@ -8,7 +8,7 @@ let Pod = function() {
 
     this.radius = 0.2
     this.speed = 0
-    this.shield = 10 + rndi(40)
+    this.shield = 10 + 5 * rndi(8)
     this.scale = [.3, .3, .3]
     this.POD_FRICTION = 0.5
 
@@ -57,7 +57,7 @@ let Pod = function() {
             this.kill()
             switch(this.up) {
             case 0:
-                t.shield += this.shield
+                t.shield = limitMax(t.shield+this.shield, t.MAX_SHIELD)
                 sfx(1, 1, this)
                 if (target == t) {
                     message("Energy +" + this.shield, 2)

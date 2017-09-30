@@ -18,7 +18,6 @@ env = {
     gameTime: 0,
     levelTime: 0,
     lastControl: 0,
-    levelCountdown: 0,
     overlay: false,
     overlayData: false,
     status: 'none',
@@ -286,10 +285,13 @@ function evo(delta) {
     // maybe level is over?
     if (env.levelCountdown == 0) {
         let winner = tryLevelUp()
-        if (winner > 0) {
+        if (winner >= 0) {
             // we have the winner!
             message('ZONE ' + env.level + ' COMPLETED'
-                    + '<hr>' + teamName(winner) + ' Team Wins!', 7)
+                    + (winner == 0?
+                         '<hr>No Winner'
+                       : '<hr>' + teamName(winner) + ' Team Wins!'),
+                    7)
             env.levelCountdown = 8
         }
     }
@@ -394,16 +396,17 @@ function render(delta) {
 
     if (target) {
         statusBar.innerHTML = ''
-            + '<font color="#A0A0D0">Lost: '
+            + 'Zone ' + env.level
+            + '<font color="#A0A0D0"> Lost: '
                 + stat.units(0, 1)
                 + '/' + (env.totalToSpawn-stat.lostSpawned) + '</font>'
 
-            + '&nbsp&nbsp<font color="#40FF20"> Green: ' + stat.units(1, 1) + '</font>'
-            + '&nbsp&nbsp<font color="#FF5020"> Red: ' + stat.units(2, 1) + '</font>'
-            + '&nbsp&nbsp<font color="#5020FF"> Blue: ' + stat.units(3, 1) + '</font>'
-            + '&nbsp&nbsp<font color="#FFD000"> Yellow: ' + stat.units(4, 1) + '</font>'
-            + (env.pause? '<br>(GAME PAUSED) ' : '')
-            + (env.demo? '<br>(DEMO MODE) ' : '')
+            + '&nbsp<font color="#40FF20"> Green: ' + stat.units(1, 1) + '</font>'
+            + '&nbsp<font color="#FF5020"> Red: ' + stat.units(2, 1) + '</font>'
+            + '&nbsp<font color="#5020FF"> Blue: ' + stat.units(3, 1) + '</font>'
+            + '&nbsp<font color="#FFD000"> Yellow: ' + stat.units(4, 1) + '</font>'
+            + (env.pause? '<p>(GAME PAUSED)</p>' : '')
+            + (env.demo? '<p>(DEMO MODE)</p>' : '')
     }
     if (target && env.overlay) {
         overlay.innerHTML = 
@@ -414,6 +417,7 @@ function render(delta) {
             + " -- " + floor(target.z*100)/100
             + " -- " + floor(target.y*100)/100
             + '<br>Shield: ' + target.shield
+            + '<br>Overheat: ' + floor(target.overheat*100)/100
             + '<br>Speed: ' + floor(target.speed)
             + (focus? ''
                 : ('<hr>Goal: ' + target.goal
@@ -428,6 +432,6 @@ function render(delta) {
     } else if (target) {
         overlay.innerHTML = ''
             + target
-            + '<br>Shield: ' + target.shield + '/' + target.MAX_SHIELD
+            + '<br>Shield: ' + floor(target.shield) + '/' + floor(target.MAX_SHIELD)
     }
 }

@@ -10,7 +10,7 @@ let Laser = function() {
     this.power = 10
     this.life = 2.5
 
-    this.join = function(src) {
+    this.join = function(src, heat) {
         this.source = src
         this.power = src.POWER
         this.yaw = src.yaw + (src.CYAW * src.dyaw)
@@ -18,30 +18,32 @@ let Laser = function() {
         this.pitch = src.pitch
         this.evo(0.07)
 
+        heat = limitRange(heat, 0, 1)
+        let aheat = 1-heat
         switch(src.team) {
         case 0:
-            this.model.ambient = [2, 2, 2]
+            this.model.ambient = [2, 2*aheat, 2*aheat]
             break;
         case 1:
-            this.model.ambient = [2, 2, 0]
+            this.model.ambient = [2, 2*aheat, 0]
             break;
         case 2:
-            this.model.ambient = [3, 1, 0]
+            this.model.ambient = [3, 1*aheat, 0]
             break;
         case 3:
-            this.model.ambient = [2, 0.3, 0]
+            this.model.ambient = [2, 0.3+2*heat, 0]
             break;
         case 4:
-            this.model.ambient = [0.5, 1.5, 2]
+            this.model.ambient = [0.5+2*heat, 1.5*aheat, 2*aheat]
             break;
         }
+        sfx(12, 0.5, this)
     }
 
     this.hit = function(t) {
         // hit the target
         switch(t.type) {
         case 1:
-        case 2:
             if (this.source == t) return
             //if (t.type == 2 && t.up == 0) return // don't hit energy powerups
             this.kill()

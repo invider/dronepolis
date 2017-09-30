@@ -50,4 +50,3 @@ If gulp got frozen, it usually happens when obsolete version of nodejs is used -
 
 The generated game archive and js/html files are located in ./dist folder
 
-
