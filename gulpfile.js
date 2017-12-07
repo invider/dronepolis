@@ -9,7 +9,6 @@ var paths = {
     scripts: [
         "glMatrix-0.9.5.min.js",
         "util.js",
-        "proc.js",
         "texture.js",
         "init.js",
         "shaders.js",

@@ -1,5 +1,5 @@
 {
-  "name": "tunnel",
+  "name": "dronepolis",
   "version": "1.0.0",
   "description": "",
   "dependencies": {
@@ -17,12 +17,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/invider/cybergrid-13.git"
+    "url": "git+https://github.com/invider/dronepolis.git"
   },
   "author": "",
   "license": "Apache License v2.0",
   "bugs": {
-    "url": "https://github.com/invider/cybergrid-13/issues"
+    "url": "https://github.com/invider/dronepolis/issues"
   },
-  "homepage": "https://github.com/invider/cybergrid-13#readme"
+  "homepage": "https://github.com/invider/dronepolis#readme"
 }

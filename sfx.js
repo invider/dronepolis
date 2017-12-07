@@ -318,13 +318,14 @@ function sfx(sample, svolume, src) {
     if (silent) return
     let pan = 0
     if (src && target) {
-        // calculate distance to sound
-        let d = target.dist(src)
-        if (d > 25) return
-        if (d > 5) {
-            svolume *= 1-(d-5)/20
-        }
-        if (d > 1) {
+        if (src != target) {
+            svolume *= .8
+            // calculate distance to sound
+            let d = target.dist(src)
+            if (d > 25) return // sfx is too far to play
+            if (d > 5) {
+                svolume *= 1-(d-5)/20
+            }
             // adjust pan
             let dir = 2*(target.angleOn(src)/PI)
             if (dir<-1) pan = -1+(-dir-1)

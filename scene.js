@@ -18,7 +18,6 @@ env = {
     gameTime: 0,
     levelTime: 0,
     lastControl: 0,
-    levelCountdown: 0,
     overlay: false,
     overlayData: false,
     status: 'none',
@@ -128,6 +127,7 @@ function targetNext(jump, team) {
         // found new drone to jump in
         target = e // attach camera
         if (focus) focus = target // attach controls if needed
+        env.targetTime = 5 + rndi(10)
     }
     return e
 }
@@ -149,7 +149,7 @@ function spawn(cons, x, y, z) {
 }
 
 function spawnDrone(team) {
-    let coord = grid.freeSpot()
+    let coord = grid.freeSpot(team)
     let e = findEntity( function(e) {
         return (dist(e.x, e.z, coord[0], coord[1]) < 5) && e.type < 3
     })
@@ -158,12 +158,13 @@ function spawnDrone(team) {
     if (target) camDist = floor(dist(target.x, target.y, coord[0], coord[1]))
 
     // if not occupied and far from the camera
-    if (!e && camDist > 50) {
+    if (!e && (team || camDist > 40)) {
         //console.log('spawning +1 drone @' + coord[0] + 'x' + coord[1] + ' camDist:' + camDist)
         let d = spawn(Drone, coord[0], -0.5, coord[1])
         d.yaw = rndfi()
         if (team) d.assignTeam(team)
         if (team == 0) stat.lostSpawned ++
+        sfx(10,1)
         return d
     } else {
         // try again
@@ -193,6 +194,7 @@ function cycle() {
     try {
         handleKeyboard(delta);
         render(delta);
+        if (delta > 0.3) delta = 0.3
         while (delta > 0.05) {
             evo(0.05)
             delta -= 0.05
@@ -243,7 +245,6 @@ function evo(delta) {
     if (env.demo) {
         env.targetTime -= delta
         if (env.targetTime < 0) {
-            env.targetTime = 5 + rndi(10)
             // find next target
             targetNext()
         }
@@ -284,10 +285,13 @@ function evo(delta) {
     // maybe level is over?
     if (env.levelCountdown == 0) {
         let winner = tryLevelUp()
-        if (winner > 0) {
+        if (winner >= 0) {
             // we have the winner!
             message('ZONE ' + env.level + ' COMPLETED'
-                    + '<hr>' + teamName(winner) + ' Team Wins!', 7)
+                    + (winner == 0?
+                         '<hr>No Winner'
+                       : '<hr>' + teamName(winner) + ' Team Wins!'),
+                    7)
             env.levelCountdown = 8
         }
     }
@@ -392,16 +396,16 @@ function render(delta) {
 
     if (target) {
         statusBar.innerHTML = ''
-            + '<font color="#A0A0D0">Lost: '
+            + 'Zone ' + env.level
+            + '<font color="#A0A0D0"> Lost: '
                 + stat.units(0, 1)
                 + '/' + (env.totalToSpawn - stat.lostSpawned) + '</font>'
-
-            + '&nbsp&nbsp<font color="#40FF20"> Green: ' + stat.units(1, 1) + '</font>'
-            + '&nbsp&nbsp<font color="#FF5020"> Red: ' + stat.units(2, 1) + '</font>'
-            + '&nbsp&nbsp<font color="#5020FF"> Blue: ' + stat.units(3, 1) + '</font>'
-            + '&nbsp&nbsp<font color="#FFD000"> Yellow: ' + stat.units(4, 1) + '</font>'
-            + (env.pause? '<br>(GAME PAUSED) ' : '')
-
+            + '&nbsp<font color="#40FF20"> Green: ' + stat.units(1, 1) + '</font>'
+            + '&nbsp<font color="#FF5020"> Red: ' + stat.units(2, 1) + '</font>'
+            + '&nbsp<font color="#5020FF"> Blue: ' + stat.units(3, 1) + '</font>'
+            + '&nbsp<font color="#FFD000"> Yellow: ' + stat.units(4, 1) + '</font>'
+            + (env.pause? '<p>(GAME PAUSED)</p>' : '')
+            + (env.demo? '<p>(DEMO MODE)</p>' : '')
     }
     if (target && env.overlay) {
         overlay.innerHTML = 
@@ -412,6 +416,7 @@ function render(delta) {
             + " -- " + floor(target.z*100)/100
             + " -- " + floor(target.y*100)/100
             + '<br>Shield: ' + target.shield
+            + '<br>Overheat: ' + floor(target.overheat*100)/100
             + '<br>Speed: ' + floor(target.speed)
             + (focus? ''
                 : ('<hr>Goal: ' + target.goal
@@ -420,15 +425,12 @@ function render(delta) {
                 + '<br>Action: ' + target.action + '[' + floor(target.actionTime) + ']'
                 + '<br>Move: ' + target.move + '[' + floor(target.moveTime) + ']')
             )
-            + '<hr>FPS: ' + Math.round(1/delta)
-            + '<br>Models: ' + env.modelsCount
             + '<br>Drones: ' + stat.units(-1, 1)
             + '<br>Status: ' + env.status
-            + (env.demo? '<br>= DEMO =' : '')
-            + (env.pause? '<br>= PAUSE =' : '')
+            + '<hr>FPS: ' + Math.round(1/delta)
     } else if (target) {
         overlay.innerHTML = ''
-            + 'Shield: ' + target.shield
-            + '<br>' + target
+            + target
+            + '<br>Shield: ' + floor(target.shield) + '/' + floor(target.MAX_SHIELD)
     }
 }

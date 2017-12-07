@@ -32,6 +32,8 @@ let Drone = function() {
     this.MAX_SHIELD = 100
     this.POWER = 10
     this.RECOIL_TIME = .3
+    this.OVERHEAT_RATE = .06
+    this.COOLING_RATE = .1
 
     this.HOVER = -this.radius * 1.5 // oscilation median
     this.HOVER_CORRIDOR = this.radius/2 // oscilation corridor
@@ -45,6 +47,7 @@ let Drone = function() {
     this.dyaw = 0
     this.shield = this.MAX_SHIELD
     this.recoil = 0
+    this.overheat = 0
     this.dy = 0
     this.odir = 1
     this.lastCollision = 0
@@ -60,7 +63,7 @@ let Drone = function() {
     }
 
     this.upgrade = function() {
-        if (this.mk > 20) {
+        if (this.mk > 29) {
             if (target == this) {
                 message("Can't install more upgrades", 3)
             }
@@ -69,7 +72,7 @@ let Drone = function() {
         this.mk++
         this.mass++
 
-        let up = rndi(5)
+        let up = rndi(7)
         let msg = ''
 
         switch(up) {
@@ -78,8 +81,8 @@ let Drone = function() {
             msg = "Drone speed upgraded +20%"
             break;
         case 1:
-            this.MAX_SHIELD *= 1.3
-            msg = "Drone speed upgraded +30%"
+            this.MAX_SHIELD *= 1.2
+            msg = "Drone speed upgraded +20%"
             break;
         case 2:
             this.THRUST *= 1.2
@@ -92,6 +95,14 @@ let Drone = function() {
         case 4:
             this.POWER *= 1.2
             msg = "Laser power upgraded +20%"
+            break;
+        case 5:
+            this.OVERHEAT_RATE *= 0.9
+            msg = "Laser heating reduced -10%"
+            break;
+        case 6:
+            this.COOLING *= 1.2
+            msg = "Laser cooling system upgraded +20%"
             break;
         }
         if (target == this) {
@@ -149,12 +160,12 @@ let Drone = function() {
             break
         case 5:
             // shoot
-            if (this.recoil <= 0) {
+            if (this.recoil <= 0 && this.overheat < 1) {
                 let l = spawn(Laser, this.x, this.y+0.05, this.z)
-                l.join(this)
-                if (this.speed > 0) l.speed += this.speed
                 this.recoil = this.RECOIL_TIME
-                sfx(12, 1, this)
+                this.overheat += this.OVERHEAT_RATE
+                l.join(this, this.overheat)
+                if (this.speed > 0) l.speed += this.speed
             }
             break;
         }
@@ -191,6 +202,7 @@ let Drone = function() {
         if (this.team == target.team) {
             message('New Lost Drone joined out team!', 3)
         }
+        sfx(9, 1, this)
     }
 
     this.hit = function(t) {
@@ -404,6 +416,7 @@ let Drone = function() {
         this.dy = limitRange(this.dy, -this.MAX_DY, this.MAX_DY)
 
         this.recoil -= delta
+        this.overheat = limitMin(this.overheat - this.COOLING_RATE*delta, 0)
         this.yaw += this.dyaw * delta
 
         this.snap() // store current xyz for future rewind if necessary
@@ -416,6 +429,7 @@ let Drone = function() {
             this.speed = -this.speed
             this.move = 0
             this.moveTime = 0
+            this.action = 3 // pick some new action
         }
 
         // ground safeguard
@@ -468,11 +482,10 @@ let Drone = function() {
             stat.kills[src.team]++
             if (src == focus) stat.playerKills[src.team] ++
         }
+        sfx(2, 1, this)
     }
 
     this.toString = function() {
         return this.name + ' MK' + this.mk + ' [' + this.team + ']'
     }
 }
-
-Drone._spawn = 0

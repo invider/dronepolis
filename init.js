@@ -27,13 +27,13 @@ function init() {
     gl.clearColor(0.03, 0.0, 0.1, 1.0); // scene background color
     //gl.clearColor(1, 1, 1, 1.0); // test white background
     gl.enable(gl.DEPTH_TEST);
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    //gl.enable(gl.BLEND);
+    //gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     
     // TODO find out what with Chrome?
-    //gl.cullFace(gl.GL_BACK);
-    //gl.frontFace(gl.CCW);
-    //gl.enable(gl.CULL_FACE);
+    gl.cullFace(gl.GL_BACK);
+    gl.frontFace(gl.CCW);
+    gl.enable(gl.CULL_FACE);
     
 
     // map event handlers

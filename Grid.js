@@ -5,8 +5,9 @@ function Grid(level) {
 
 let grid = this
 
-_seed = level * 5723
-this.width = 16 + level*6
+_seed = level * 2001
+this.width = scaleLinear(20, level, 2, 40)
+this.hwidth = floor(this.width/2)-1
 this.gwidth = this.width * SCALE
 
 this.lat = []
@@ -161,14 +162,43 @@ this.free = function(x, z, r) {
         && tst(lx, lz, lr, tx+1, tz-1)
 }
 
-this.freeSpot = function() {
-    let i = rndi(this.width * this.width)
-    let lx = floor(i / this.width)
+this.nextFree = function(i) {
+    let lx = floor(++i / this.width)
     let lz = i % this.width
+    if (lx >= this.width) return this.nextFree(this.width)
+
     if (this.lat[lx][lz] < 100) {
         return [glob(lx), glob(lz)]
     }
-    return this.freeSpot()
+    return this.nextFree(i)
+}
+
+this.freeSpot = function(team) {
+    let i = rndi(this.width * this.width)
+    let lx = floor(i / this.width)
+    let lz = i % this.width
+    switch(team) {
+    case 1:
+        lx = 1+rndi(this.hwidth)
+        lz = 1+rndi(this.hwidth)
+        break;
+    case 2:
+        lx = this.hwidth + rndi(this.hwidth)
+        lz = rndi(this.hwidth)
+        break;
+    case 3:
+        lx = rndi(this.hwidth)
+        lz = this.hwidth + rndi(this.hwidth)
+        break;
+    case 4:
+        lx = this.hwidth + rndi(this.hwidth)
+        lz = this.hwidth + rndi(this.hwidth)
+        break;
+    }
+    if (this.lat[lx][lz] < 100) {
+        return [glob(lx), glob(lz)]
+    }
+    return this.nextFree(lx*this.width + lz)
 }
 
 this.collide = function(t, d) {
