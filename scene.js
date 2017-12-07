@@ -2,7 +2,7 @@ var gl;
 
 // fine tuning
 CULLING = 60
-SPAWN_RATE = 0.3
+SPAWN_RATE = 0.5
 ROLLING_DEMO_TIME = 30
 
 // resources
@@ -394,7 +394,7 @@ function render(delta) {
         statusBar.innerHTML = ''
             + '<font color="#A0A0D0">Lost: '
                 + stat.units(0, 1)
-                + '/' + env.totalToSpawn + '</font>'
+                + '/' + (env.totalToSpawn - stat.lostSpawned) + '</font>'
 
             + '&nbsp&nbsp<font color="#40FF20"> Green: ' + stat.units(1, 1) + '</font>'
             + '&nbsp&nbsp<font color="#FF5020"> Red: ' + stat.units(2, 1) + '</font>'
