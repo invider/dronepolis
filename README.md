@@ -19,8 +19,6 @@ Trick - in Demo mode you can jump into drone of any team. Once you take control 
 
 
 ## Things left to do that haven't got into compo version
-- [ ] fix unlimited shields bug
-- [ ] fix levelup bug
 - [ ] stop bots colliding into the walls over and over again
 - [ ] stop bots trying to fire at each other through the walls
 - [ ] make bots better maze explorers
@@ -30,10 +28,12 @@ Trick - in Demo mode you can jump into drone of any team. Once you take control 
 - [ ] fix killed-by-the-wall type of collisions
 - [ ] make bots more aggressive (they should attack instead of collecting pods when enemies are around)
 - [ ] explosions
-- [ ] introduce penalty for hitting walls or drones
-- [ ] introduce laser overhea
+- [ ] introduce penalty for hitting walls or drones?
 - [ ] update sfx
 - [ ] hot-seat mode
+- [X] fix unlimited shields bug
+- [X] fix levelup bug
+- [X] introduce laser overheat
 
 
 ## How to build minimized version
