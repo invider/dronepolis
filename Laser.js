@@ -22,19 +22,19 @@ let Laser = function() {
         let aheat = 1-heat
         switch(src.team) {
         case 0:
-            this.model.ambient = [2, 2*aheat, 2*aheat]
+            this.model.ambient = [1+2*heat, 0.4+2*aheat, 0]
             break;
         case 1:
-            this.model.ambient = [2, 2*aheat, 0]
+            this.model.ambient = [1+2*heat, 0.4+2*aheat, 0]
             break;
         case 2:
-            this.model.ambient = [3, 1*aheat, 0]
+            this.model.ambient = [1+2*heat, 2*aheat, 0]
             break;
         case 3:
-            this.model.ambient = [2, 0.3+2*heat, 0]
+            this.model.ambient = [1+2*heat, 1+2*aheat, 0]
             break;
         case 4:
-            this.model.ambient = [0.5+2*heat, 1.5*aheat, 2*aheat]
+            this.model.ambient = [1+2*heat, 2+2*aheat, 0]
             break;
         }
         sfx(12, 0.5, this)
