@@ -202,7 +202,7 @@ let Drone = function() {
         if (this.team == target.team) {
             message('New Lost Drone joined out team!', 3)
         }
-        sfx(9, 1, this)
+        sfx(7, 1, this)
     }
 
     this.hit = function(t) {
@@ -231,6 +231,7 @@ let Drone = function() {
                     this.action = 1
                     this.actionTime = 1 + rndi(2)
                 }
+                if (this == target || t == target) sfx(5, 1)
             }
             this.infect(t)
             break;
@@ -430,6 +431,7 @@ let Drone = function() {
             this.move = 0
             this.moveTime = 0
             this.action = 3 // pick some new action
+            if (target == this) sfx(6, 0.3)
         }
 
         // ground safeguard

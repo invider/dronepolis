@@ -1,0 +1,36 @@
+<html>
+    <head>
+        <script src="sfx.js"></script>
+    </head>
+    <body>
+    <script>
+    generateSFX()
+    silent = false
+    sfx(0, 1)
+
+    document.addEventListener('keydown', (event) => {
+        const k = event.key;
+
+        switch(k) {
+        case '0': sfx(0, 1); break;
+        case '1': sfx(1, 1); break;
+        case '2': sfx(2, 1); break;
+        case '3': sfx(3, 1); break;
+        case '4': sfx(4, 1); break;
+        case '5': sfx(5, 1); break;
+        case '6': sfx(6, 1); break;
+        case '7': sfx(7, 1); break;
+        case '8': sfx(8, 1); break;
+        case '9': sfx(9, 1); break;
+        case 'q': sfx(10, 1); break;
+        case 'w': sfx(11, 1); break;
+        case 'e': sfx(12, 1); break;
+        case 'r': sfx(13, 1); break;
+        }
+    }, false);
+    </script>
+
+    <h2>sfx test synth</h2>
+    <p>Press 0-9 to play</p>
+    </body>
+</html>

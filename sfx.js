@@ -1,3 +1,10 @@
+/*
+ * Simple procedural sfx synth
+ *
+ * 1. call generateSFX() on init stages to generate sfx audio clips
+ * 2. set silent = false
+ * 3. call sfx([sfx number], [volume 0-1], [source with x/y])
+ */
 var silent = true
 var volume = 0.7
 var samples = []
@@ -30,6 +37,8 @@ function envda(t, d, a, al) {
     if (t < d + a) return al*((t-d)/a) // atack
     return al
 }
+
+// time, attack time, attack level, decay time, decay level
 function envac(t, a, al, c, sl) {
     if (t < a) return al*(t/a) // atack
     if (t < a + c) return sl + (al-sl)*(1 - (t-a)/c) // decay
@@ -77,9 +86,13 @@ function renderNoise(t) {
 }
 
 function renderShortNoise(t) {
-    if (t < 0.5) return envacr(t, 0.05, 0.2, 0, 0.2, 0.3, 0.1) * (
-            Math.random()*2
-            + triangle(t))
+    if (t < 0.1) return 1 * envacr(t, 0.05, 0.1, 0, 0.05, 0.05, 0.1) * Math.random()
+            + 0.5 * saw(t * 100 * envac(t, 0.05, 1, 0.1, 0))
+    return 9
+}
+
+function renderLongNoise(t) {
+    if (t < 0.2) return envacr(t, 0.02, 1, 0.02, 1, 0.01, 0) * Math.random()
     return 9
 }
 
@@ -130,24 +143,6 @@ function renderDrone2(t) {
     var v = envacr(t, 0.3, 0.8, 0.3, 0.6, 0.5, 2) * square(
             f * t
             + 4*enva(t, 1.7, 0.8) * Math.sin(P2 * f/4 * t)
-            + Math.sin(P2 * f*2 * t)
-    )
-
-    var r = t - 2
-    // sustain
-    if (r > 0) {
-        if (r > 0.2) { return 9 } // kill note
-        v *= envr(r, 0.2) // release
-    }
-    return v * 0.2
-}
-
-function renderDrone3(t) {
-    var f = 120
-    var v = envacr(t, 0.3, 0.8, 0.3, 0.6, 0.5, 2) * square(
-            f * t
-            + 32*enva(t, 0.7, 0.8) * Math.sin(P2 * f/4 * t)
-            + 16*envda(t, 1.5, 0.2, 0.8) * Math.sin(P2 * f/4 * t)
             + Math.sin(P2 * f*2 * t)
     )
 
@@ -363,17 +358,13 @@ function loop(sample, time) {
 }
 
 function generateSFX() {
-    samples.push(createSample(renderSpawn, 120)) 
-    samples.push(createSample(renderCoin, 200)) // 1 pick up
-    samples.push(createSample(renderDrone2, false)) // 2 shoot
-    samples.push(createSample(renderDrone3, false)) // 3 infection
-    samples.push(createSample(renderPew, false)) // 4 cure
-    samples.push(createSample(renderShortNoise, false)) // 5 inf cure
-    samples.push(createSample(renderDrone2, false)) // 6 chain
-    samples.push(createSample(renderDrone3, false)) // 7 iceless
-    samples.push(createSample(renderDrone3, false)) // 8 term iceless
-    samples.push(createSample(renderAlienPhone, 220)) // 9 new level
-    samples.push(createSample(renderSpawn, 110)) // 10 virus spawned
-    samples.push(createSample(renderSpawn, 220)) // 11 ice spawned
-    samples.push(createSample(renderLaser, 220)) // 12 ice spawned
+    samples.push(createSample(renderLaser, 120))// 0 - laser
+    samples.push(createSample(renderCoin, 200)) // 1 +shield
+    samples.push(createSample(renderDrone2, false)) // 2 - killed
+    samples.push(createSample(renderDrone2, false)) // 3 - free
+    samples.push(createSample(renderPew, false)) // 4 +powerup
+    samples.push(createSample(renderShortNoise, false)) // 5 hit
+    samples.push(createSample(renderLongNoise, false)) // 6 wall hit
+    samples.push(createSample(renderAlienPhone, 220)) // 7 +1 to the team
+    samples.push(createSample(renderSpawn, 110)) // 8 +1 lost
 }

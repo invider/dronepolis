@@ -37,7 +37,7 @@ let Laser = function() {
             this.model.ambient = [1+2*heat, 2+2*aheat, 0]
             break;
         }
-        sfx(12, 0.5, this)
+        sfx(0, 0.4, this)
     }
 
     this.hit = function(t) {
@@ -84,6 +84,5 @@ let Laser = function() {
 
     this.kill = function() {
         this.alive = false
-        //sfx(10, 1, this)
     }
 }

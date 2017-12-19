@@ -164,7 +164,7 @@ function spawnDrone(team) {
         d.yaw = rndfi()
         if (team) d.assignTeam(team)
         if (team == 0) stat.lostSpawned ++
-        sfx(10,1)
+        sfx(8,1)
         return d
     } else {
         // try again
