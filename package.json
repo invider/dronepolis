@@ -10,7 +10,8 @@
     "harmonize": "^2.0.0"
   },
   "devDependencies": {
-    "gulp": "^4.0.2"
+    "gulp": "^4.0.2",
+    "lodash.template": ">=4.5.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
