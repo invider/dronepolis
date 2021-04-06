@@ -5,7 +5,7 @@
 npm update
 npm upgrade
 
-sudo npm install --global gulp-cli
+npm install --global gulp-cli
 npm install --save-dev gulp
 npm install harmonize
 npm install gulp-closure-compiler
