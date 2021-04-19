@@ -23,6 +23,7 @@ env = {
     status: 'none',
     message: '',
     messageTime: 0,
+    trace: '',
 }
 
 // entities
@@ -433,4 +434,5 @@ function render(delta) {
             + target
             + '<br>Shield: ' + floor(target.shield) + '/' + floor(target.MAX_SHIELD)
     }
+    trace.innerHTML = env.trace
 }

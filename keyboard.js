@@ -9,6 +9,27 @@ function handleKeyDown(e) {
     return false;
 }
 
+function execute(cmd) {
+    switch(cmd) {
+        case 'godmode':
+            env.god = true
+            break
+    }
+}
+
+let commandInput = false
+function handleCommand(e) {
+    if (e.code === 'Enter') {
+        execute(env.trace.substring(1))
+        commandInput = false
+        env.trace = ''
+    } else if (e.code === 'Backspace') {
+        env.trace = '\\'
+    } else if (e.key.length === 1) {
+        env.trace += e.key
+    }
+}
+
 let nextSfx = 0
 function handleKeyUp(e) {
     var code = e.which || e.keyCode
@@ -19,6 +40,12 @@ function handleKeyUp(e) {
         env.pause = false
         return false
     }
+
+    if (commandInput) {
+        handleCommand(e)
+        return false
+    }
+
     switch(code) {
     case 27:
         // ESC - new level
@@ -63,6 +90,10 @@ function handleKeyUp(e) {
         break;
     case 80:
         env.pause = true
+        break;
+    case 220:
+        commandInput = true
+        env.trace = '\\'
         break;
     }
     e.preventDefault()

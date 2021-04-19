@@ -464,6 +464,8 @@ let Drone = function() {
     }
     
     this.kill = function(src) {
+        if (env.god && this == focus) return
+
         this.alive = false
 
         // spoils

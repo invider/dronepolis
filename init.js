@@ -20,6 +20,7 @@ function init() {
     // setup text overlay
     overlayData = true
     overlay = document.getElementById("overlay")
+    trace = document.getElementById("trace")
     statusBar = document.getElementById("status")
     messageBar = document.getElementById("message") 
 
